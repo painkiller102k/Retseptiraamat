@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="Retseptiraamat.csproj">
+    <Deploy />
+  </Project>
+</Solution>

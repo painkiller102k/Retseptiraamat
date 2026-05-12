@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Retseptiraamat.LisaLeht"
+             Title="LisaLeht">
+
+    <VerticalStackLayout Padding="20" Spacing="15">
+
+        <Label Text="Добавить рецепт" FontSize="24" FontAttributes="Bold"/>
+
+        <Entry x:Name="nimiEntry" Placeholder="Название рецепта"/>
+        <Entry x:Name="kategooriaEntry" Placeholder="Категория"/>
+
+        <Button Text="Сохранить"
+                Clicked="Salvesta_Clicked"
+                BackgroundColor="Green"
+                TextColor="White"/>
+
+        <Button Text="Vali pilt telefonist"
+        Clicked="ValiPilt_Clicked"
+        BackgroundColor="DodgerBlue"
+        TextColor="White"/>
+        
+    </VerticalStackLayout>
+</ContentPage>
