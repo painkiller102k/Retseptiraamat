@@ -1,63 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
+﻿using System.Text.Json;
 
-namespace Retseptiraamat
+namespace Retseptiraamat;
+
+public static class FailiHaldur
 {
-    public static class FailiHaldur
+    static string fail = Path.Combine(FileSystem.AppDataDirectory, "retseptid.json");
+
+    public static List<Retsept> Loe()
     {
-        static string fail = Path.Combine(FileSystem.AppDataDirectory, "retseptid.txt");
-
-        public static void Salvesta(string nimi, string kategooria, string pilt)
+        try
         {
-            string rida = $"{nimi};{kategooria};{pilt}";
-            File.AppendAllText(fail, rida + Environment.NewLine);
-        }
-
-        public static List<Retsept> Loe()
-        {
-            var list = new List<Retsept>();
-
             if (!File.Exists(fail))
-                return list;
+                return new List<Retsept>();
 
-            var read = File.ReadAllLines(fail);
-
-            foreach (var rida in read)
-            {
-                try
-                {
-                    if (string.IsNullOrWhiteSpace(rida))
-                        continue;
-
-                    var osad = rida.Split(';');
-
-                    if (osad.Length >= 3)
-                    {
-                        list.Add(new Retsept
-                        {
-                            Nimi = osad[0],
-                            Kategooria = osad[1],
-                            PildiLink = osad[2]
-                        });
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Viga: {ex.Message}");
-                }
-            }
-
-            return list;
+            var json = File.ReadAllText(fail);
+            return JsonSerializer.Deserialize<List<Retsept>>(json) ?? new List<Retsept>();
         }
-
-        public static void KirjutaKogu(List<Retsept> retseptid)
+        catch
         {
-            var read = retseptid.Select(r =>
-                $"{r.Nimi};{r.Kategooria};{r.PildiLink}");
-
-            File.WriteAllLines(fail, read);
+            return new List<Retsept>();
         }
+    }
+
+    public static void SalvestaKõik(List<Retsept> retseptid)
+    {
+        try
+        {
+            var json = JsonSerializer.Serialize(retseptid);
+            File.WriteAllText(fail, json);
+        }
+        catch { }
     }
 }

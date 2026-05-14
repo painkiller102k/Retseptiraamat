@@ -1,8 +1,8 @@
-namespace Retseptiraamat;
+﻿namespace Retseptiraamat;
 
 public partial class NimekiriLeht : ContentPage
 {
-    List<Retsept> k�ikRetseptid = new();
+    List<Retsept> kõikRetseptid = new();
 
     public NimekiriLeht()
     {
@@ -17,25 +17,78 @@ public partial class NimekiriLeht : ContentPage
 
     void Lae()
     {
-        k�ikRetseptid = FailiHaldur.Loe();
+        try
+        {
+            kõikRetseptid = FailiHaldur.Loe();
 
-        var grupeeritud = k�ikRetseptid
-            .GroupBy(x => x.Kategooria)
-            .Select(g => new RetseptiGrupp(g.Key, g))
-            .ToList();
+            kategooriaPicker.ItemsSource = kõikRetseptid
+                .Select(x => x.Kategooria)
+                .Distinct()
+                .ToList();
 
-        listView.ItemsSource = grupeeritud;
+            Näita(kõikRetseptid);
+        }
+        catch
+        {
+            collectionView.ItemsSource = new List<RetseptiKategooria>();
+        }
     }
 
-    private void Kustuta_Clicked(object sender, EventArgs e)
+    void Näita(List<Retsept> list)
     {
-        var menu = sender as MenuItem;
-        var retsept = menu.BindingContext as Retsept;
+        var grouped = list
+            .GroupBy(r => r.Kategooria)
+            .Select(g => new RetseptiKategooria(g.Key, g))
+            .ToList();
 
-        k�ikRetseptid.Remove(retsept);
+        collectionView.ItemsSource = grouped;
+    }
 
-        FailiHaldur.KirjutaKogu(k�ikRetseptid);
+    private void Filtreeri_Clicked(object sender, EventArgs e)
+    {
+        if (kategooriaPicker.SelectedItem == null)
+            return;
 
-        Lae();
+        string valitud = kategooriaPicker.SelectedItem.ToString();
+
+        var filtered = kõikRetseptid
+            .Where(r => r.Kategooria == valitud)
+            .ToList();
+
+        Näita(filtered);
+    }
+
+    private void NaitaKoik_Clicked(object sender, EventArgs e)
+    {
+        Näita(kõikRetseptid);
+    }
+
+    private async void Kustuta_Clicked(object sender, EventArgs e)
+    {
+        try
+        {
+            var btn = sender as Button;
+            var retsept = btn?.CommandParameter as Retsept;
+
+            if (retsept == null)
+                return;
+
+            bool vastus = await DisplayAlert("Kustuta",
+                "Kas oled kindel?",
+                "Jah",
+                "Ei");
+
+            if (!vastus)
+                return;
+
+            kõikRetseptid.Remove(retsept);
+            FailiHaldur.SalvestaKõik(kõikRetseptid);
+
+            Lae();
+        }
+        catch
+        {
+            await DisplayAlert("Viga", "Kustutamine ebaõnnestus", "OK");
+        }
     }
 }

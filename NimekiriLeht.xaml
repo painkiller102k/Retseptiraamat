@@ -1,75 +1,95 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Retseptiraamat.NimekiriLeht"
              Title="Minu retseptid"
-             BackgroundColor="#F5F5F5">
+             BackgroundColor="#0F172A">
 
-    <ListView x:Name="listView"
-              IsGroupingEnabled="True"
-              HasUnevenRows="True"
-              SeparatorVisibility="None">
+    <VerticalStackLayout Padding="10" Spacing="10">
 
-        <!-- ГРУППА -->
-        <ListView.GroupHeaderTemplate>
-            <DataTemplate>
-                <ViewCell>
-                    <Frame BackgroundColor="#4CAF50"
+        <Label Text="🍲 Minu retseptid"
+               FontSize="26"
+               TextColor="White"
+               FontAttributes="Bold"/>
+
+        <!-- 🔽 FILTER -->
+        <HorizontalStackLayout Spacing="10">
+
+            <Picker x:Name="kategooriaPicker"
+                    Title="Vali kategooria"
+                    WidthRequest="200"/>
+
+            <Button Text="Filtreeri"
+                    Clicked="Filtreeri_Clicked"
+                    BackgroundColor="#2563EB"
+                    TextColor="White"/>
+
+            <Button Text="Kõik"
+                    Clicked="NaitaKoik_Clicked"
+                    BackgroundColor="#64748B"
+                    TextColor="White"/>
+
+        </HorizontalStackLayout>
+
+        <!-- 📋 LIST -->
+        <CollectionView x:Name="collectionView"
+                        IsGrouped="True">
+
+            <!-- GROUP HEADER -->
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate>
+                    <Frame BackgroundColor="#334155"
                            Padding="10"
-                           CornerRadius="10"
-                           Margin="10,5">
+                           CornerRadius="12"
+                           Margin="10">
+
                         <Label Text="{Binding Nimetus}"
                                TextColor="White"
                                FontSize="18"
                                FontAttributes="Bold"/>
                     </Frame>
-                </ViewCell>
-            </DataTemplate>
-        </ListView.GroupHeaderTemplate>
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
 
-        <!-- ЭЛЕМЕНТ -->
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <ViewCell>
-
-                    <!-- Swipe menu -->
-                    <ViewCell.ContextActions>
-                        <MenuItem Text="Kustuta"
-                                  IsDestructive="True"
-                                  Clicked="Kustuta_Clicked"/>
-                    </ViewCell.ContextActions>
-
-                    <Frame Margin="10,5"
+            <!-- ITEM -->
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Margin="10"
                            Padding="10"
-                           CornerRadius="15"
-                           BackgroundColor="White"
-                           HasShadow="True">
+                           CornerRadius="20"
+                           BackgroundColor="#1E293B">
 
                         <Grid ColumnDefinitions="80,*">
 
                             <Image Source="{Binding PildiLink}"
-                                   WidthRequest="70"
                                    HeightRequest="70"
+                                   WidthRequest="70"
                                    Aspect="AspectFill"/>
 
                             <VerticalStackLayout Grid.Column="1"
-                                                 VerticalOptions="Center"
                                                  Spacing="5">
 
                                 <Label Text="{Binding Nimi}"
-                                       FontSize="16"
+                                       TextColor="White"
+                                       FontSize="18"
                                        FontAttributes="Bold"/>
 
                                 <Label Text="{Binding Kategooria}"
-                                       FontSize="12"
                                        TextColor="Gray"/>
+
+                                <Button Text="🗑 Kustuta"
+                                        BackgroundColor="#EF4444"
+                                        TextColor="White"
+                                        CommandParameter="{Binding .}"
+                                        Clicked="Kustuta_Clicked"/>
                             </VerticalStackLayout>
 
                         </Grid>
-
                     </Frame>
-                </ViewCell>
-            </DataTemplate>
-        </ListView.ItemTemplate>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
 
-    </ListView>
+        </CollectionView>
+
+    </VerticalStackLayout>
 </ContentPage>

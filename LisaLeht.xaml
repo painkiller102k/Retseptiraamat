@@ -2,24 +2,44 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Retseptiraamat.LisaLeht"
-             Title="LisaLeht">
+             Title="Lisa retsept"
+             BackgroundColor="#0F172A">
 
-    <VerticalStackLayout Padding="20" Spacing="15">
+    <ScrollView>
 
-        <Label Text="Добавить рецепт" FontSize="24" FontAttributes="Bold"/>
+        <VerticalStackLayout Padding="20" Spacing="15">
 
-        <Entry x:Name="nimiEntry" Placeholder="Название рецепта"/>
-        <Entry x:Name="kategooriaEntry" Placeholder="Категория"/>
+            <Label Text="➕ Lisa retsept"
+                   FontSize="30"
+                   FontAttributes="Bold"
+                   TextColor="White"/>
 
-        <Button Text="Сохранить"
-                Clicked="Salvesta_Clicked"
-                BackgroundColor="Green"
-                TextColor="White"/>
+            <Entry x:Name="nimiEntry"
+                   Placeholder="Retsepti nimi"
+                   TextColor="White"
+                   PlaceholderColor="Gray"/>
 
-        <Button Text="Vali pilt telefonist"
-        Clicked="ValiPilt_Clicked"
-        BackgroundColor="DodgerBlue"
-        TextColor="White"/>
-        
-    </VerticalStackLayout>
+            <Entry x:Name="kategooriaEntry"
+                   Placeholder="Kategooria"
+                   TextColor="White"
+                   PlaceholderColor="Gray"/>
+
+            <Button Text="📷 Vali pilt"
+                    Clicked="ValiPilt_Clicked"
+                    BackgroundColor="#2563EB"
+                    TextColor="White"/>
+
+            <Image x:Name="previewImage"
+                   HeightRequest="200"
+                   Aspect="AspectFill"/>
+
+            <Button Text="💾 Salvesta"
+                    Clicked="Salvesta_Clicked"
+                    BackgroundColor="#22C55E"
+                    TextColor="White"/>
+
+        </VerticalStackLayout>
+
+    </ScrollView>
+
 </ContentPage>

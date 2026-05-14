@@ -20,12 +20,12 @@ public partial class LisaLeht : ContentPage
             if (result != null)
             {
                 pildiTee = result.FullPath;
-                await DisplayAlert("Valitud", "Pilt lisatud!", "OK");
+                previewImage.Source = ImageSource.FromFile(pildiTee);
             }
         }
-        catch (Exception ex)
+        catch
         {
-            await DisplayAlert("Viga", ex.Message, "OK");
+            await DisplayAlert("Viga", "Pildi valimine ebaõnnestus", "OK");
         }
     }
 
@@ -34,25 +34,26 @@ public partial class LisaLeht : ContentPage
         if (string.IsNullOrWhiteSpace(nimiEntry.Text) ||
             string.IsNullOrWhiteSpace(kategooriaEntry.Text))
         {
-            await DisplayAlert("Viga", "Täida kõik väljad!", "OK");
+            await DisplayAlert("Viga", "Täida kõik väljad", "OK");
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(pildiTee))
+        var list = FailiHaldur.Loe();
+
+        list.Add(new Retsept
         {
-            await DisplayAlert("Viga", "Vali kõigepealt pilt telefonist!", "OK");
-            return;
-        }
+            Nimi = nimiEntry.Text.Trim(),
+            Kategooria = kategooriaEntry.Text.Trim(),
+            PildiLink = pildiTee ?? ""
+        });
 
-        FailiHaldur.Salvesta(
-            nimiEntry.Text.Trim(),
-            kategooriaEntry.Text.Trim(),
-            pildiTee);
+        FailiHaldur.SalvestaKõik(list);
 
         nimiEntry.Text = "";
         kategooriaEntry.Text = "";
         pildiTee = null;
+        previewImage.Source = null;
 
-        await DisplayAlert("OK", "Retsept salvestatud!", "OK");
+        await DisplayAlert("OK", "Retsept lisatud", "OK");
     }
 }
